@@ -1,0 +1,3 @@
+textual[dev]
+psycopg[binary]
+psycopg[c]
