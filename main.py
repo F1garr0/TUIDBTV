@@ -3,7 +3,7 @@ import os
 from textual.containers import *
 from textual.widgets import Tree, DataTable, Footer
 
-from controllers.PostgresController import PostgresController
+from controllers.ControllerFactory import ControllerFactory
 from widgets.QuitScreen import QuitScreen
 from widgets.SelectConnection import SelectConnection
 from widgets.NewConnection import NewConnection
@@ -38,7 +38,7 @@ class TreeApp(App):
 
     def on_mount(self) -> None:
         def select_connection(data):
-            self.dbController = PostgresController(data['database'], data['userName'], data['password'], data['hostName'], data['port'])
+            self.dbController = ControllerFactory.getController(data)
             tree = self.query_one(Tree)
             tree.root.expand()
             for schemaName in self.dbController.getSchemaNames():

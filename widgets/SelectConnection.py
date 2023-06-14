@@ -36,8 +36,12 @@ class SelectConnection(ModalScreen):
                 optionList.add_option(connection["connectionName"])
 
     def on_button_pressed(self, event):
+        def addNewConnection(connectionName):
+            optionList: OptionList = self.query_one("#select_connection_list")
+            optionList.add_option(connectionName)
+
         if event.button.id == "new_connection_button":
-            self.parent.push_screen(NewConnection())
+            self.parent.push_screen(NewConnection(), addNewConnection)
         else:
             selectedConnection: OptionList = self.query_one("#select_connection_list")
             selectedOption = selectedConnection.get_option_at_index(self.highlighted_index).prompt.__str__()

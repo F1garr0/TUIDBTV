@@ -11,7 +11,7 @@ from textual.widgets import Select, Label, Input, Button, Placeholder
 class NewConnection(ModalScreen):
     def compose(self) -> ComposeResult:
         yield Grid(
-            Select([("postgresql", 1), ("testvalue", 2)], allow_blank=False, value=1),
+            Select([("postgresql", "postgresql"), ("mysql", "mysql")], allow_blank=False, value=1, id="new_connection_type"),
             Label("Connection name"),
             Input(id="new_connection_name", validators=[Length(minimum=1)]),
             Label("Username"),
@@ -32,6 +32,7 @@ class NewConnection(ModalScreen):
 
     def on_button_pressed(self, event):
         if event.button.id == "save_connection_button":
+            connectionType: Select = self.query_one("#new_connection_type")
             connectionName: Input = self.query_one("#new_connection_name")
             hostName: Input = self.query_one("#new_connection_hostname")
             userName: Input = self.query_one("#new_connection_username")
@@ -39,7 +40,7 @@ class NewConnection(ModalScreen):
             port: Input = self.query_one("#new_connection_port")
             database: Input = self.query_one("#new_connection_database")
             data = {
-                "connectionType": "postgresql",
+                "connectionType": connectionType.value,
                 "connectionName": connectionName.value,
                 "hostName": hostName.value or hostName.placeholder,
                 "userName": userName.value or userName.placeholder,
@@ -52,7 +53,8 @@ class NewConnection(ModalScreen):
                 jsonData["connections"].append(data)
                 file.seek(0)
                 json.dump(jsonData, file)
-        self.app.pop_screen()
+        #self.app.pop_screen()
+        self.dismiss(connectionName.value)
 
     @on(Input.Changed)
     def show_invalid_reasons(self, event: Input.Changed) -> None:
