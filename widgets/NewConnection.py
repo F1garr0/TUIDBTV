@@ -53,8 +53,8 @@ class NewConnection(ModalScreen):
                 jsonData["connections"].append(data)
                 file.seek(0)
                 json.dump(jsonData, file)
-        #self.app.pop_screen()
-        self.dismiss(connectionName.value)
+            self.dismiss(connectionName.value)
+        else: self.app.pop_screen()
 
     @on(Input.Changed)
     def show_invalid_reasons(self, event: Input.Changed) -> None:

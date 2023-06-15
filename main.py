@@ -1,7 +1,7 @@
 from textual.app import App, ComposeResult
 import os
 from textual.containers import *
-from textual.widgets import Tree, DataTable, Footer
+from textual.widgets import Tree, DataTable, Footer, Header
 
 from controllers.ControllerFactory import ControllerFactory
 from widgets.QuitScreen import QuitScreen
@@ -20,7 +20,7 @@ TODO:
 '''
 # ---------------------------------------------------------------------------------------------
 
-class TreeApp(App):
+class TUIDBTV(App):
     CSS_PATH = "default.css"
 
     BINDINGS = [
@@ -30,7 +30,7 @@ class TreeApp(App):
     ]
 
     def compose(self) -> ComposeResult:
-
+        yield Header()
         with Horizontal():
             yield Tree("schemas")
             yield DataTable()
@@ -70,6 +70,6 @@ class TreeApp(App):
 
 if __name__ == "__main__":
     os.environ['TERM'] = 'xterm-256color'
-    app = TreeApp()
+    app = TUIDBTV()
     reply = app.run()
     print(reply)

@@ -15,10 +15,10 @@ RadioSet {
     align: center middle;
 }
 
-DataTable:focus {
+/*DataTable:focus {
     width: 5fr;
     background: $primary 0%;
-}
+}*/
 
 SelectConnection {
     align: center middle;
@@ -54,6 +54,14 @@ QuitScreen {
     background: $surface;
     align: center middle;
     content-align-horizontal: center;
+}
+
+OptionList {
+    padding: 1;
+    width: 100%;
+}
+OptionList:focus{
+    outline: hkey $accent;
 }
 
 Grid > Label {
@@ -106,7 +114,9 @@ Placeholder {
 
 #cancel_select_connection_button {}
 
-/*
+
 Button {
     width: 100%;
-}*/
+    margin-left: 1;
+    margin-right: 1;
+}
