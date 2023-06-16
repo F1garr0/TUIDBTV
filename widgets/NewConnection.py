@@ -1,11 +1,11 @@
-import json
-
 from textual import on
 from textual.app import ComposeResult
 from textual.containers import Grid
 from textual.screen import ModalScreen
 from textual.validation import Length, Number
 from textual.widgets import Select, Label, Input, Button, Placeholder
+
+from config.ConfigParser import ConfigParser
 
 
 class NewConnection(ModalScreen):
@@ -48,13 +48,10 @@ class NewConnection(ModalScreen):
                 "port": port.value or port.placeholder,
                 "database": database.value or database.placeholder
             }
-            with open('connections.json', 'r+') as file:
-                jsonData = json.load(file)
-                jsonData["connections"].append(data)
-                file.seek(0)
-                json.dump(jsonData, file)
+            ConfigParser.addNewConnection(data)
             self.dismiss(connectionName.value)
-        else: self.app.pop_screen()
+        else:
+            self.app.pop_screen()
 
     @on(Input.Changed)
     def show_invalid_reasons(self, event: Input.Changed) -> None:
