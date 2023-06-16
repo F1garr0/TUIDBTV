@@ -1,7 +1,8 @@
 import json
 
 from textual.app import ComposeResult
-from textual.containers import Grid
+from textual.color import Color
+from textual.containers import Grid, Vertical
 from textual.screen import ModalScreen
 from textual.widgets import OptionList, Placeholder, Button, Footer, Header
 
@@ -21,9 +22,14 @@ class SelectConnection(ModalScreen):
     def compose(self) -> ComposeResult:
         yield Grid(
             OptionList(id="select_connection_list"),
-            Button("Test Connection", id="test_connection_button", disabled=True),
-            Button("New Connection", variant="primary", id="new_connection_button"),
+            Vertical(
+                Button("New Connection", variant="primary", id="new_connection_button"),
+                Button("Test connection", id="test_connection_button", disabled=True),
+                Button("Edit connection", id="edit_connection_button", disabled=True),
+                Button.error("Delete Connection", id="delete_connection_button", disabled=True),
+            ),
             Button.warning("Cancel", id="cancel_select_connection_button", disabled = not self.can_quit),
+            Placeholder(),
             Button.success("Connect", id="connect_button", disabled=True),
             id="select_connection_dialog"
         )
@@ -52,17 +58,42 @@ class SelectConnection(ModalScreen):
                         self.dismiss(connection)
             case "cancel_select_connection_button":
                     self.app.pop_screen()
-            case "test_connection_button":
+            case "delete_connection_button":
                 selectedConnection: OptionList = self.query_one("#select_connection_list")
-                selectedOption = selectedConnection.get_option_at_index(self.highlighted_index).prompt.__str__()
-                for connection in self.connectionsList:
-                    if connection['connectionName'] == selectedOption:
-                        controller = ControllerFactory.getController(connection)
+                #selectedOption = selectedConnection.get_option_at_index(self.highlighted_index).prompt.__str__()
+                selectedConnection.remove_option_at_index(self.highlighted_index)
+                if selectedConnection.option_count == 0:
+                    self.query_one("#connect_button").disabled = True
+                    self.query_one("#test_connection_button").disabled = True
+                    # self.query_one("#edit_connection_button").disabled = True
+                    self.query_one("#delete_connection_button").disabled = True
+
+
+            case "test_connection_button":
+                try:
+                    selectedConnection: OptionList = self.query_one("#select_connection_list")
+                    selectedOption = selectedConnection.get_option_at_index(self.highlighted_index).prompt.__str__()
+                    for connection in self.connectionsList:
+                        if connection['connectionName'] == selectedOption:
+                            controller = ControllerFactory.getController(connection)
+                            #self.query_one("#test_connection_button").styles.background = Color.parse("green")
+                            btn:Button = self.query_one("#test_connection_button")
+                            btn.variant = "success"
+                            btn.label = "success"
+                except:
+                    btn: Button = self.query_one("#test_connection_button")
+                    btn.variant = "error"
+                    btn.label = "error"
 
     def on_option_list_option_highlighted(self, event: OptionList.OptionMessage):
         self.query_one("#connect_button").disabled = False
         self.query_one("#test_connection_button").disabled = False
+        #self.query_one("#edit_connection_button").disabled = False
+        self.query_one("#delete_connection_button").disabled = False
         self.highlighted_index = event.option_index
+        test_connection_button: Button = self.query_one("#test_connection_button")
+        test_connection_button.variant = "default"
+        test_connection_button.label = "Test Connection"
 
     #def on_option_list_option_selected(self, event):
     #    for connection in self.connectionsList:
