@@ -11,7 +11,7 @@ from config.ConfigParser import ConfigParser
 class NewConnection(ModalScreen):
     def compose(self) -> ComposeResult:
         yield Grid(
-            Select([("postgresql", "postgresql"), ("mysql", "mysql")], allow_blank=False, value=1, id="new_connection_type"),
+            Select([("postgresql", "postgresql"), ("mysql", "mysql")], allow_blank=False, value="postgresql", id="new_connection_type"),
             Label("Connection name"),
             Input(id="new_connection_name", validators=[Length(minimum=1)]),
             Label("Username"),
@@ -32,13 +32,13 @@ class NewConnection(ModalScreen):
 
     def on_button_pressed(self, event):
         if event.button.id == "save_connection_button":
-            connectionType: Select = self.query_one("#new_connection_type")
-            connectionName: Input = self.query_one("#new_connection_name")
-            hostName: Input = self.query_one("#new_connection_hostname")
-            userName: Input = self.query_one("#new_connection_username")
-            password: Input = self.query_one("#new_connection_password")
-            port: Input = self.query_one("#new_connection_port")
-            database: Input = self.query_one("#new_connection_database")
+            connectionType: Select = self.query_one("#new_connection_type", expect_type=Select)
+            connectionName: Input = self.query_one("#new_connection_name", expect_type=Input)
+            hostName: Input = self.query_one("#new_connection_hostname", expect_type=Input)
+            userName: Input = self.query_one("#new_connection_username", expect_type=Input)
+            password: Input = self.query_one("#new_connection_password", expect_type=Input)
+            port: Input = self.query_one("#new_connection_port", expect_type=Input)
+            database: Input = self.query_one("#new_connection_database", expect_type=Input)
             data = {
                 "connectionType": connectionType.value,
                 "connectionName": connectionName.value,

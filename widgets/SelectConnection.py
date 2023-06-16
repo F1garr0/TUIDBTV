@@ -6,6 +6,7 @@ from textual.widgets import OptionList, Placeholder, Button, Footer, Header
 from config.ConfigParser import ConfigParser
 from controllers.ControllerFactory import ControllerFactory
 from widgets.NewConnection import NewConnection
+from widgets.PopUpScreen import PopUpScreen
 
 
 class SelectConnection(ModalScreen):
@@ -49,7 +50,11 @@ class SelectConnection(ModalScreen):
                 selectedOption = selectedConnection.get_option_at_index(self.highlighted_index).prompt.__str__()
                 for connection in ConfigParser.readConnectionList():
                     if connection['connectionName'] == selectedOption:
-                        self.dismiss(connection)
+                        try:
+                            controller = ControllerFactory.getController(connection)
+                            self.dismiss(controller)
+                        except:
+                            self.app.push_screen(PopUpScreen("Some errors happened while trying to connect :c"))
             case "cancel_select_connection_button":
                 self.app.pop_screen()
             case "delete_connection_button":

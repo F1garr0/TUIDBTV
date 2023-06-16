@@ -37,8 +37,8 @@ class TUIDBTV(App):
         yield Footer()
 
     def on_mount(self) -> None:
-        def select_connection(data):
-            self.dbController = ControllerFactory.getController(data)
+        def select_connection(db_contoller):
+            self.dbController = db_contoller
             tree = self.query_one(Tree)
             tree.root.expand()
             for schemaName in self.dbController.getSchemaNames():
