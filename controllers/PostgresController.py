@@ -17,6 +17,16 @@ class PostgresController(DBController):
             self.connection.commit()
             raise
 
+    def executyQueryWithHeaders(self, query_text):
+        try:
+            cursor = self.connection.cursor()
+            data = cursor.execute(query_text).fetchall()
+            header_data = tuple(column_name[0] for column_name in cursor.description)
+            data.insert(0, header_data)
+            return data
+        except:
+            self.connection.rollback()
+
     def getSchemaNames(self):
         return self.executeQuery("SELECT distinct table_schema FROM information_schema.tables")
 

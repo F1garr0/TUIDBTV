@@ -3,12 +3,19 @@ Tree {
     height: 100%;
 }
 
-DataTable {
+TabbedContent {
     width: 4fr;
     margin: 1;
+    margin-top: 0;
     height: 100%;
     background: 0%;
+    overflow: auto auto;
 }
+
+DataTable {
+    overflow: auto auto;
+}
+
 
 RadioSet {
     width: 50%;
