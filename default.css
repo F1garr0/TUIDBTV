@@ -11,6 +11,10 @@ TabbedContent {
     background: 0%;
     overflow: auto auto;
 }
+/*TabPane {
+    height: 10;
+    width: 95%;
+}*/
 
 DataTable {
     overflow: auto auto;
@@ -43,6 +47,12 @@ QuitScreen {
 
 PopUpScreen {
     align: center middle;
+    content-align: center top;
+}
+
+#popup_text {
+    align: center middle;
+    content-align: center middle;
 }
 
 #dialog {
