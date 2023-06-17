@@ -10,7 +10,7 @@ from widgets.QuitScreen import QuitScreen
 from widgets.SelectConnection import SelectConnection
 from widgets.NewConnection import NewConnection
 
-sql_abc = ["select * from pg_catalog.pg_type;"]
+sql_abc = ["select rolname from pg_catalog.pg_roles;"]
 
 '''
 TODO:
