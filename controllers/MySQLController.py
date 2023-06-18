@@ -27,3 +27,15 @@ class MySQLController(DBController):
 
     def executeQuery(self, queryText: str) -> list[dict]:
         pass
+
+
+    def executyQueryWithHeaders(self, query_text):
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query_text)
+            data = cursor.fetchall()
+            header_data = tuple(column_name[0] for column_name in cursor.description)
+            data.insert(0, header_data)
+            return data
+        except:
+            self.connection.rollback()
