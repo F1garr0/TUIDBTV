@@ -5,31 +5,23 @@ Tree {
 
 TabbedContent {
     width: 4fr;
-    margin: 1;
-    margin-top: 0;
     height: 100%;
-    background: 0%;
-    overflow: auto auto;
 }
-/*TabPane {
-    height: 10;
-    width: 95%;
-}*/
 
 DataTable {
-    overflow: auto auto;
+height: 100%;
 }
 
+TabPane {
+    min-height: 10;
+    height: 1fr;
+    overflow: scroll;
+}
 
 RadioSet {
     width: 50%;
     align: center middle;
 }
-
-/*DataTable:focus {
-    width: 5fr;
-    background: $primary 0%;
-}*/
 
 SelectConnection {
     align: center middle;
@@ -97,7 +89,6 @@ OptionList:focus{
 
 Grid > Label {
     content-align: right top;
-    /*outline: wide green;*/
     width: 100%;
     height: 100%;
 }
