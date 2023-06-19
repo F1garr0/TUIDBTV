@@ -1,23 +1,22 @@
-from textual.app import App, ComposeResult
 import os
+from textual.app import App, ComposeResult
 from textual.containers import *
-from textual.widgets import Tree, DataTable, Footer, Header
+from textual.widgets import Tree, DataTable, Footer, Header, TabbedContent, TabPane, Markdown, TextLog, Input, Button
 
-from controllers.ControllerFactory import ControllerFactory
 from widgets.QuitScreen import QuitScreen
+from widgets.SQLEditor import SQLEditor
 from widgets.SelectConnection import SelectConnection
-from widgets.NewConnection import NewConnection
 
 '''
 TODO:
 - add more connection types
 - research jdbc analog
-- add editor
 - sort tables alphabetical
 - add views preview
-- add test connection button
-- do not stop app if cannot connect
+- add edit connection functionality
 '''
+
+
 # ---------------------------------------------------------------------------------------------
 
 class TUIDBTV(App):
@@ -26,19 +25,24 @@ class TUIDBTV(App):
     BINDINGS = [
         ("q", "quit_window()", "Quit"),
         ("s", "select_connection_window()", "Select connection"),
-        ("n", "new_connection_window()", "New Connection"),
     ]
 
     def compose(self) -> ComposeResult:
         yield Header()
         with Horizontal():
             yield Tree("schemas")
-            yield DataTable()
+            with TabbedContent():
+                with TabPane("preview", id="preview_tab"):
+                    yield DataTable(id="preview_data_table")
+                with TabPane("editor", id="editor_tab"):
+                    yield SQLEditor()
+                with TabPane("+", id="add_new_tab"):
+                    yield Markdown()
         yield Footer()
 
-    def on_mount(self) -> None:
-        def select_connection(db_contoller):
-            self.dbController = db_contoller
+    def openConnectionSelectScreen(self):
+        def select_connection(db_controller):
+            self.dbController = db_controller
             tree = self.query_one(Tree)
             tree.root.expand()
             for schemaName in self.dbController.getSchemaNames():
@@ -48,9 +52,12 @@ class TUIDBTV(App):
 
         self.push_screen(SelectConnection(_can_quit=False), select_connection)
 
+    def on_mount(self) -> None:
+        self.openConnectionSelectScreen()
+
     def on_tree_node_selected(self, event):
         if not event.node.children:
-            table = self.query_one(DataTable)
+            table = self.query_one("#preview_data_table")
             table.clear(columns=True)
             tableData = self.dbController.getTablePreview(event.node.parent.label, event.node.label)
             table.add_columns(*tableData[0])
@@ -61,12 +68,12 @@ class TUIDBTV(App):
         self.push_screen(QuitScreen())
 
     def action_select_connection_window(self):
-        self.push_screen(SelectConnection())
-
-    def action_new_connection_window(self):
-        self.push_screen(NewConnection())
+        tree = self.query_one(Tree)
+        tree.clear()
+        self.openConnectionSelectScreen()
 
 # ---------------------------------------------------------------------------------------------
+
 
 if __name__ == "__main__":
     os.environ['TERM'] = 'xterm-256color'

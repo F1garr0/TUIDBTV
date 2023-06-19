@@ -8,8 +8,24 @@ class PostgresController(DBController):
         self.connection = psycopg.connect(dbname=_dbname, user=_user, password=_password, host=_host,
                                           port=_port)
 
-    def executeQuery(self, queryText):
-        return self.connection.cursor().execute(queryText).fetchall()
+    def executeQuery(self, query_text):
+        try:
+            data = self.connection.cursor().execute(query_text).fetchall()
+            self.connection.commit()
+            return data
+        except:
+            self.connection.commit()
+            raise
+
+    def executyQueryWithHeaders(self, query_text):
+        try:
+            cursor = self.connection.cursor()
+            data = cursor.execute(query_text).fetchall()
+            header_data = tuple(column_name[0] for column_name in cursor.description)
+            data.insert(0, header_data)
+            return data
+        except:
+            self.connection.rollback()
 
     def getSchemaNames(self):
         return self.executeQuery("SELECT distinct table_schema FROM information_schema.tables")
