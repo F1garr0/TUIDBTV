@@ -1,4 +1,5 @@
 import psycopg
+from psycopg import ProgrammingError
 
 from controllers.DBController import DBController
 
@@ -20,12 +21,16 @@ class PostgresController(DBController):
     def executyQueryWithHeaders(self, query_text):
         try:
             cursor = self.connection.cursor()
-            data = cursor.execute(query_text).fetchall()
-            header_data = tuple(column_name[0] for column_name in cursor.description)
+            try:
+                data = cursor.execute(query_text).fetchall()
+            except ProgrammingError:
+                data = []
+            header_data = tuple(column_name[0] for column_name in cursor.description or [])
             data.insert(0, header_data)
             return data
-        except:
+        except Exception as e:
             self.connection.rollback()
+            raise e
 
     def getSchemaNames(self):
         return self.executeQuery("SELECT distinct table_schema FROM information_schema.tables")

@@ -26,5 +26,5 @@ class SQLEditor(Widget):
                 table.add_columns(*data[0])
                 table.zebra_stripes = True
                 table.add_rows(data[1:])
-            except:
-                self.app.push_screen(PopUpScreen("Error :c"))
+            except Exception as e:
+                self.app.push_screen(PopUpScreen(e.__str__()))
