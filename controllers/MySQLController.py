@@ -1,33 +1,34 @@
 from controllers.DBController import DBController
 import mysql.connector
 
+
 class MySQLController(DBController):
     def __init__(self, _dbname, _user, _password, _host, _port):
         self.connection = mysql.connector.connect(
             host=_host,
             user=_user,
             password=_password,
-            port=_port)
-    def getSchemaNames(self) -> list[str]:
-        cursor = self.connection.cursor()
-        cursor.execute("SHOW DATABASES")
-        return cursor.fetchall()
+            port=_port,
+            database=_dbname)
 
-    def getTableNamesBySchema(self, schemaName: str) -> list[str]:
-        cursor = self.connection.cursor()
-        cursor.execute(f"SHOW TABLES FROM `{schemaName}`")
-        return cursor.fetchall()
+    def getSchemaNames(self):
+        return self.executeQuery("SHOW DATABASES")
 
-    def getTablePreview(self, schemaName: str, tableName: str) -> list[dict]:
-        cursor = self.connection.cursor()
-        cursor.execute(f"SELECT * FROM {schemaName}.{tableName} limit 100")
-        myresult = cursor.fetchall()
-        myresult.insert(0,next(zip(*cursor.description)))
-        return myresult
+    def getTableNamesBySchema(self, schemaName: str):
+        return self.executeQuery(f"SHOW TABLES FROM `{schemaName}`")
 
-    def executeQuery(self, queryText: str) -> list[dict]:
-        pass
+    def getTablePreview(self, schemaName: str, tableName: str):
+        return self.executyQueryWithHeaders(f"SELECT * FROM {schemaName}.{tableName} limit 100")
 
+    def executeQuery(self, query_text: str):
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query_text)
+            data = cursor.fetchall()
+            return data
+        except Exception as e:
+            self.connection.rollback()
+            raise e
 
     def executyQueryWithHeaders(self, query_text):
         try:
@@ -37,5 +38,6 @@ class MySQLController(DBController):
             header_data = tuple(column_name[0] for column_name in cursor.description)
             data.insert(0, header_data)
             return data
-        except:
+        except Exception as e:
             self.connection.rollback()
+            raise e
