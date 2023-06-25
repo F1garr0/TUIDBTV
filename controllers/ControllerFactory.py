@@ -8,10 +8,12 @@ class ControllerFactory:
     def getController(data):
         match data['connectionType']:
             case "postgresql":
-                return PostgresController(data['database'], data['userName'], data['password'], data['hostName'], data['port'])
+                return PostgresController(data['database'], data['userName'], data['password'], data['hostName'],
+                                          data['port'])
 
             case "mysql":
-                return MySQLController(data['database'], data['userName'], data['password'], data['hostName'], data['port'])
+                return MySQLController(data['database'], data['userName'], data['password'], data['hostName'],
+                                       data['port'])
 
             case "sqlite":
-                return SQLLiteController()
+                return SQLLiteController(data['db_path'])

@@ -26,23 +26,17 @@ class NewConnection(ModalScreen):
 
     def on_button_pressed(self, event):
         if event.button.id == "save_connection_button":
+            connection_data = {}
             connectionType: Select = self.query_one("#new_connection_type", expect_type=Select)
             connectionName: Input = self.query_one("#new_connection_name", expect_type=Input)
-            hostName: Input = self.query_one("#new_connection_hostname", expect_type=Input)
-            userName: Input = self.query_one("#new_connection_username", expect_type=Input)
-            password: Input = self.query_one("#new_connection_password", expect_type=Input)
-            port: Input = self.query_one("#new_connection_port", expect_type=Input)
-            database: Input = self.query_one("#new_connection_database", expect_type=Input)
-            data = {
-                "connectionType": connectionType.value,
-                "connectionName": connectionName.value,
-                "hostName": hostName.value or hostName.placeholder,
-                "userName": userName.value or userName.placeholder,
-                "password": password.value or password.placeholder,
-                "port": port.value or port.placeholder,
-                "database": database.value or database.placeholder
-            }
-            ConfigParser.addNewConnection(data)
+            connection_data['connectionType'] = connectionType.value
+            connection_data['connectionName'] = connectionName.value
+
+            data_fields = self.query(".CONNECTION_DATA_FIELD")
+            for field in data_fields.nodes:
+                connection_data[field.id] = field.value or field.placeholder
+
+            ConfigParser.addNewConnection(connection_data)
             self.dismiss(connectionName.value)
         else:
             self.app.pop_screen()

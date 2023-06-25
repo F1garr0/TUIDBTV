@@ -12,7 +12,7 @@ class SQLLiteController(DBController):
         self.connection = sqlite3.connect(_db_path)
 
     def getSchemaNames(self) -> list[str]:
-        return ['tables']
+        return [['tables']]
 
     def getTableNamesBySchema(self, schemaName: str) -> list[str]:
         return self.executeQuery("SELECT name FROM sqlite_master WHERE type='table';")
@@ -36,6 +36,6 @@ class SQLLiteController(DBController):
     def get_connection_form():
         return Grid(
             Label("DataBase path"),
-            Input(placeholder=":memory:", id="new_connection_username"),
+            Input(placeholder=":memory:", id="db_path", classes="CONNECTION_DATA_FIELD"),
             id="connection_form"
         )

@@ -44,6 +44,7 @@ class TUIDBTV(App):
         def select_connection(db_controller):
             self.dbController = db_controller
             tree = self.query_one(Tree)
+            tree.clear()
             tree.root.expand()
             for schemaName in self.dbController.getSchemaNames():
                 schema = tree.root.add(schemaName[0])
@@ -68,8 +69,6 @@ class TUIDBTV(App):
         self.push_screen(QuitScreen())
 
     def action_select_connection_window(self):
-        tree = self.query_one(Tree)
-        tree.clear()
         self.openConnectionSelectScreen(can_quit=True)
 
 # ---------------------------------------------------------------------------------------------

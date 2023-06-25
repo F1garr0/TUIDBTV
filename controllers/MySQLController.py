@@ -50,14 +50,14 @@ class MySQLController(DBController):
     def get_connection_form():
         return Grid(
             Label("Username"),
-            Input(placeholder="root", id="new_connection_username"),
+            Input(placeholder="root", id="userName", classes="CONNECTION_DATA_FIELD"),
             Label("Password"),
-            Input(placeholder="", id="new_connection_password", password=True),
+            Input(placeholder="", id="password", password=True, classes="CONNECTION_DATA_FIELD"),
             Label("Hostname/IP"),
-            Input(placeholder="localhost", id="new_connection_hostname"),
+            Input(placeholder="localhost", id="hostName", classes="CONNECTION_DATA_FIELD"),
             Label("Port"),
-            Input(placeholder="3306", id="new_connection_port", validators=[Number()], ),
+            Input(placeholder="3306", id="port", validators=[Number()], classes="CONNECTION_DATA_FIELD"),
             Label("Database"),
-            Input(placeholder="mysql", id="new_connection_database"),
+            Input(placeholder="mysql", id="database", classes="CONNECTION_DATA_FIELD"),
             id="connection_form"
         )
