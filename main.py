@@ -56,8 +56,8 @@ class TUIDBTV(App):
     def on_mount(self) -> None:
         self.openConnectionSelectScreen(can_quit=False)
 
-    def on_tree_node_selected(self, event):
-        if not event.node.children:
+    def on_tree_node_selected(self, event: Tree.NodeSelected):
+        if not event.node.allow_expand:
             table = self.query_one("#preview_data_table")
             table.clear(columns=True)
             tableData = self.dbController.getTablePreview(event.node.parent.label, event.node.label)
