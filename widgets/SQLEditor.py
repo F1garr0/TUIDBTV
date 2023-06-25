@@ -20,7 +20,7 @@ class SQLEditor(Widget):
         if event.button.id == "execute_editor_button":
             query_text = self.query_one("#new_request_input", expect_type=Input).value
             try:
-                data = self.app.dbController.executyQueryWithHeaders(query_text)
+                data = self.app.dbController.executeQueryWithHeaders(query_text)
                 table = self.query_one("#editor_table")
                 table.clear(columns=True)
                 table.add_columns(*data[0])

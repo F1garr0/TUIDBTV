@@ -6,24 +6,18 @@ from textual.validation import Length, Number
 from textual.widgets import Select, Label, Input, Button, Placeholder
 
 from config.ConfigParser import ConfigParser
+from widgets.forms.ConnectionForms import ConnectionForms
 
 
 class NewConnection(ModalScreen):
     def compose(self) -> ComposeResult:
         yield Grid(
-            Select([("postgresql", "postgresql"), ("mysql", "mysql")], allow_blank=False, value="postgresql", id="new_connection_type"),
-            Label("Connection name"),
+            Select([("postgresql", "postgresql"), ("mysql", "mysql"), ("sqlite", "sqlite")], allow_blank=False,
+                   value="postgresql",
+                   id="new_connection_type"),
+            Label("Connection name *"),
             Input(id="new_connection_name", validators=[Length(minimum=1)]),
-            Label("Username"),
-            Input(placeholder="postgres", id="new_connection_username"),
-            Label("Password"),
-            Input(placeholder="", id="new_connection_password", password=True),
-            Label("Hostname/IP"),
-            Input(placeholder="localhost", id="new_connection_hostname"),
-            Label("Port"),
-            Input(placeholder="5432", id="new_connection_port", validators=[Number()]),
-            Label("Database"),
-            Input(placeholder="public", id="new_connection_database"),
+            ConnectionForms("postgresql"),
             Button("Cancel", disabled=False),
             Placeholder(),
             Button("Save", id="save_connection_button", disabled=True),
@@ -60,3 +54,8 @@ class NewConnection(ModalScreen):
                 self.query_one("#save_connection_button").disabled = True
             else:
                 self.query_one("#save_connection_button").disabled = False
+
+    @on(Select.Changed)
+    def select_new_connection_type(self, event: Select.Changed):
+        form = self.query_one(ConnectionForms)
+        form.changeForm(event.value)

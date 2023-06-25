@@ -40,7 +40,7 @@ class TUIDBTV(App):
                     yield Markdown()
         yield Footer()
 
-    def openConnectionSelectScreen(self):
+    def openConnectionSelectScreen(self, can_quit=False):
         def select_connection(db_controller):
             self.dbController = db_controller
             tree = self.query_one(Tree)
@@ -50,10 +50,10 @@ class TUIDBTV(App):
                 for tableName in self.dbController.getTableNamesBySchema(schemaName[0]):
                     schema.add_leaf(tableName[0])
 
-        self.push_screen(SelectConnection(_can_quit=False), select_connection)
+        self.push_screen(SelectConnection(_can_quit=can_quit), select_connection)
 
     def on_mount(self) -> None:
-        self.openConnectionSelectScreen()
+        self.openConnectionSelectScreen(can_quit=False)
 
     def on_tree_node_selected(self, event):
         if not event.node.children:
@@ -70,7 +70,7 @@ class TUIDBTV(App):
     def action_select_connection_window(self):
         tree = self.query_one(Tree)
         tree.clear()
-        self.openConnectionSelectScreen()
+        self.openConnectionSelectScreen(can_quit=True)
 
 # ---------------------------------------------------------------------------------------------
 

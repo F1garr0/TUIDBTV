@@ -10,3 +10,10 @@ class DBController():
 
     def executeQuery(self, queryText: str) -> list[dict]:
         pass
+
+    def executeQueryWithHeaders(self, queryText: str):
+        pass
+
+    @staticmethod
+    def get_connection_form():
+        pass

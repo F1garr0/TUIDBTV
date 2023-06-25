@@ -30,7 +30,9 @@ SelectConnection {
 NewConnection {
     align: center middle;
     background: $surface;
-}
+    align: center middle;
+    content-align-horizontal: center;
+}*/
 
 
 QuitScreen {
@@ -69,8 +71,9 @@ PopUpScreen {
 }
 
 #new_connection_dialog {
-    grid-size: 3 8;
+    grid-size: 3 4;
     grid-gutter: 1;
+    grid-rows: 1fr 1fr 6fr;
     width: 75;
     height: 35;
     border: thick $background 80%;

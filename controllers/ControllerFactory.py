@@ -1,5 +1,6 @@
 from controllers.MySQLController import MySQLController
 from controllers.PostgresController import PostgresController
+from controllers.SQLLiteController import SQLLiteController
 
 
 class ControllerFactory:
@@ -11,3 +12,6 @@ class ControllerFactory:
 
             case "mysql":
                 return MySQLController(data['database'], data['userName'], data['password'], data['hostName'], data['port'])
+
+            case "sqlite":
+                return SQLLiteController()

@@ -1,5 +1,8 @@
 import psycopg
 from psycopg import ProgrammingError
+from textual.containers import Grid
+from textual.validation import Number
+from textual.widgets import Label, Input
 
 from controllers.DBController import DBController
 
@@ -18,7 +21,7 @@ class PostgresController(DBController):
             self.connection.commit()
             raise
 
-    def executyQueryWithHeaders(self, query_text):
+    def executeQueryWithHeaders(self, query_text):
         try:
             cursor = self.connection.cursor()
             try:
@@ -55,3 +58,19 @@ class PostgresController(DBController):
         for row in cutted_data:
             tableData.append(row)
         return tableData
+
+    @staticmethod
+    def get_connection_form():
+        return Grid(
+            Label("Username"),
+            Input(placeholder="postgres", id="new_connection_username"),
+            Label("Password"),
+            Input(placeholder="", id="new_connection_password", password=True),
+            Label("Hostname/IP"),
+            Input(placeholder="localhost", id="new_connection_hostname"),
+            Label("Port"),
+            Input(placeholder="5432", id="new_connection_port", validators=[Number()], ),
+            Label("Database"),
+            Input(placeholder="public", id="new_connection_database"),
+            id="connection_form"
+        )
