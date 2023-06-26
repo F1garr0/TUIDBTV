@@ -5,6 +5,8 @@ from textual.widgets import Label, Input
 from controllers.DBController import DBController
 import mysql.connector
 
+from enums_and_variables import CONNECTION_FIELD_CLASS
+
 
 class MySQLController(DBController):
     def __init__(self, _dbname, _user, _password, _host, _port):
@@ -47,17 +49,17 @@ class MySQLController(DBController):
             raise e
 
     @staticmethod
-    def get_connection_form():
+    def get_connection_form() -> Grid:
         return Grid(
             Label("Username"),
-            Input(placeholder="root", id="userName", classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder="root", id="userName", classes=CONNECTION_FIELD_CLASS),
             Label("Password"),
-            Input(placeholder="", id="password", password=True, classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder="", id="password", password=True, classes=CONNECTION_FIELD_CLASS),
             Label("Hostname/IP"),
-            Input(placeholder="localhost", id="hostName", classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder="localhost", id="hostName", classes=CONNECTION_FIELD_CLASS),
             Label("Port"),
-            Input(placeholder="3306", id="port", validators=[Number()], classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder="3306", id="port", validators=[Number()], classes=CONNECTION_FIELD_CLASS),
             Label("Database"),
-            Input(placeholder="mysql", id="database", classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder="mysql", id="database", classes=CONNECTION_FIELD_CLASS),
             id="connection_form"
         )

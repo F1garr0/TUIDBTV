@@ -45,6 +45,14 @@ class SelectConnection(ModalScreen):
         match event.button.id:
             case "new_connection_button":
                 self.parent.push_screen(NewConnection(), addNewConnection)
+
+            case "edit_connection_button":
+                selectedConnection: OptionList = self.queryConnectionsList()
+                selectedOption = selectedConnection.get_option_at_index(self.highlighted_index).prompt.__str__()
+                for connection in ConfigParser.readConnectionList():
+                    if connection['connectionName'] == selectedOption:
+                        self.parent.push_screen(NewConnection(connection))
+
             case "connect_button":
                 selectedConnection: OptionList = self.queryConnectionsList()
                 selectedOption = selectedConnection.get_option_at_index(self.highlighted_index).prompt.__str__()
@@ -74,7 +82,8 @@ class SelectConnection(ModalScreen):
                     selectedOption = selectedConnection.get_option_at_index(self.highlighted_index).prompt.__str__()
                     for connection in ConfigParser.readConnectionList():
                         if connection['connectionName'] == selectedOption:
-                            controller = ControllerFactory.getController(connection)
+                            # TODO replace with testConnection maybe
+                            ControllerFactory.getController(connection)
                             btn: Button = self.query_one("#test_connection_button", expect_type=Button)
                             btn.variant = "success"
                             btn.label = "success"
@@ -86,7 +95,7 @@ class SelectConnection(ModalScreen):
     def on_option_list_option_highlighted(self, event: OptionList.OptionMessage):
         self.query_one("#connect_button").disabled = False
         self.query_one("#test_connection_button").disabled = False
-        # self.query_one("#edit_connection_button").disabled = False
+        self.query_one("#edit_connection_button").disabled = False
         self.query_one("#delete_connection_button").disabled = False
         self.highlighted_index = event.option_index
         test_connection_button: Button = self.query_one("#test_connection_button", expect_type=Button)
@@ -96,10 +105,3 @@ class SelectConnection(ModalScreen):
     def queryConnectionsList(self) -> OptionList:
         return self.query_one("#select_connection_list", expect_type=OptionList)
 
-    #def getSelectedConnection(self):
-    #    pass
-
-    # def on_option_list_option_selected(self, event):
-    #    for connection in ConfigParser.readConnectionList():
-    #        if connection['connectionName'] == event.option.prompt.__str__():
-    #            self.dismiss(connection)

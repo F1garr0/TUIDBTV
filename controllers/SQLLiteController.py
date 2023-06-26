@@ -4,6 +4,7 @@ from textual.containers import Grid
 from textual.widgets import Label, Input
 
 from controllers.DBController import DBController
+from enums_and_variables import CONNECTION_FIELD_CLASS
 
 
 class SQLLiteController(DBController):
@@ -33,9 +34,9 @@ class SQLLiteController(DBController):
         return data
 
     @staticmethod
-    def get_connection_form():
+    def get_connection_form() -> Grid:
         return Grid(
             Label("DataBase path"),
-            Input(placeholder=":memory:", id="db_path", classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder=":memory:", id="db_path", classes=CONNECTION_FIELD_CLASS),
             id="connection_form"
         )

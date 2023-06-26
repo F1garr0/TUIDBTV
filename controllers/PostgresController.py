@@ -5,6 +5,7 @@ from textual.validation import Number
 from textual.widgets import Label, Input
 
 from controllers.DBController import DBController
+from enums_and_variables import CONNECTION_FIELD_CLASS
 
 
 class PostgresController(DBController):
@@ -60,17 +61,17 @@ class PostgresController(DBController):
         return tableData
 
     @staticmethod
-    def get_connection_form():
+    def get_connection_form() -> Grid:
         return Grid(
             Label("Username"),
-            Input(placeholder="postgres", id="userName", classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder="postgres", id="userName", classes=CONNECTION_FIELD_CLASS),
             Label("Password"),
-            Input(placeholder="", id="password", password=True, classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder="", id="password", password=True, classes=CONNECTION_FIELD_CLASS),
             Label("Hostname/IP"),
-            Input(placeholder="localhost", id="hostName", classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder="localhost", id="hostName", classes=CONNECTION_FIELD_CLASS),
             Label("Port"),
-            Input(placeholder="5432", id="port", validators=[Number()], classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder="5432", id="port", validators=[Number()], classes=CONNECTION_FIELD_CLASS),
             Label("Database"),
-            Input(placeholder="public", id="database", classes="CONNECTION_DATA_FIELD"),
+            Input(placeholder="public", id="database", classes=CONNECTION_FIELD_CLASS),
             id="connection_form"
         )
