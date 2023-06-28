@@ -2,10 +2,10 @@ from textual.containers import Grid
 from textual.validation import Number
 from textual.widgets import Label, Input
 
-from controllers.DBController import DBController
+from src.tuidbtv.controllers.DBController import DBController
 import mysql.connector
 
-from enums_and_variables import CONNECTION_FIELD_CLASS
+from src.tuidbtv.enums_and_variables import CONNECTION_FIELD_CLASS
 
 
 class MySQLController(DBController):

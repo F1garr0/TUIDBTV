@@ -4,8 +4,8 @@ from textual.containers import Grid
 from textual.validation import Number
 from textual.widgets import Label, Input
 
-from controllers.DBController import DBController
-from enums_and_variables import CONNECTION_FIELD_CLASS
+from src.tuidbtv.controllers.DBController import DBController
+from src.tuidbtv.enums_and_variables import CONNECTION_FIELD_CLASS
 
 
 class PostgresController(DBController):

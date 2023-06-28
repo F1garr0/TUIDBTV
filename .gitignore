@@ -1,3 +1,5 @@
 /venv/
 /.idea/
-connections.json
+src/tuidbtv/connections.json
+/dist/
+.pypirc
