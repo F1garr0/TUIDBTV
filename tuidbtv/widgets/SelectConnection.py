@@ -1,12 +1,12 @@
 from textual.app import ComposeResult
 from textual.containers import Grid, Vertical
 from textual.screen import ModalScreen
-from textual.widgets import OptionList, Placeholder, Button, Footer, Header
+from textual.widgets import OptionList, Placeholder, Button
 
-from config.ConfigParser import ConfigParser
-from controllers.ControllerFactory import ControllerFactory
-from widgets.NewConnection import NewConnection
-from widgets.PopUpScreen import PopUpScreen
+from tuidbtv.config.ConfigParser import ConfigParser
+from tuidbtv.controllers.ControllerFactory import ControllerFactory
+from tuidbtv.widgets.NewConnection import NewConnection
+from tuidbtv.widgets.PopUpScreen import PopUpScreen
 
 
 class SelectConnection(ModalScreen):

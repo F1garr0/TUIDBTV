@@ -4,7 +4,7 @@ from textual.suggester import SuggestFromList
 from textual.widget import Widget
 from textual.widgets import Input, Button, DataTable
 
-from widgets.PopUpScreen import PopUpScreen
+from tuidbtv.widgets.PopUpScreen import PopUpScreen
 
 sql_abc = ["select rolname from pg_catalog.pg_roles;"]
 

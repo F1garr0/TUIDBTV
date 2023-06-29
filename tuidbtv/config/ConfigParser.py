@@ -2,7 +2,24 @@ import json
 
 
 class ConfigParser():
+    CONFIG_NAME = "connections.json"
+
+    def require(fileName: str):
+        def deco(func):
+            def wrapper():
+                try:
+                    file = open(fileName, 'r')
+                    file.close()
+                except:
+                    with open(fileName, 'w') as file:
+                        file.write("{\"connections\": []}")
+                finally:
+                    return func()
+            return wrapper
+        return deco
+
     @staticmethod
+    @require(CONFIG_NAME)
     def readConnectionList():
         with open("connections.json", 'r') as file:
             return json.load(file)["connections"]

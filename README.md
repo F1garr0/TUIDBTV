@@ -1,30 +1,32 @@
+# TUIDBTV
+
 Terminal User interface DataBase Tables Viewer
-Based on [Textualize/textual](https://github.com/Textualize/textual)
+
+based on [Textualize/textual](https://github.com/Textualize/textual)
 
 ---
 
 #### Installation
 ```bash
-git clone https://github.com/F1garr0/TUIDBTV.git
-```
-```bash
-pip install -r requirments.txt
+sudo pip install tuidbtv
 ```
 ---
-#### Usage
+#### Run
 ```bash
-python main.py
+tuidbtv
 ```
 ---
 #### Requirments
-**Neccessary**
 - python >= 3.11
 - textual
-
-**Optional (database connection libs)**
 - psycopg
 - mysql-connector-python
-#### Screenshots
+
+You may need to install psycopg binary distribution
+```bash
+pip install psycopg_binary
+```
+### Screenshots
 
 ![Screen1](/resources/screen1.png)
 ![Screen2](/resources/screen2.png)

@@ -155,6 +155,8 @@ Placeholder {
 
 #select_connection_list {
     column-span: 2;
+    height:100%;
+    padding-top: 0;
 }
 
 #new_connection_button {

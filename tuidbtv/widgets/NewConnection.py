@@ -2,12 +2,12 @@ from textual import on, events
 from textual.app import ComposeResult
 from textual.containers import Grid
 from textual.screen import ModalScreen
-from textual.validation import Length, Number
+from textual.validation import Length
 from textual.widgets import Select, Label, Input, Button, Placeholder
 
-from config.ConfigParser import ConfigParser
-from enums_and_variables import CONNECTION_FIELD_SELECTOR
-from widgets.forms.ConnectionForms import ConnectionForms
+from tuidbtv.config.ConfigParser import ConfigParser
+from tuidbtv.enums_and_variables import CONNECTION_FIELD_SELECTOR
+from tuidbtv.widgets.forms.ConnectionForms import ConnectionForms
 
 
 class NewConnection(ModalScreen):

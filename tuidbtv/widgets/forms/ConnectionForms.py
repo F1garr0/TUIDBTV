@@ -2,9 +2,9 @@ from textual.app import ComposeResult
 from textual.widget import Widget
 from textual.widgets import Input
 
-from controllers.MySQLController import MySQLController
-from controllers.PostgresController import PostgresController
-from controllers.SQLLiteController import SQLLiteController
+from tuidbtv.controllers.MySQLController import MySQLController
+from tuidbtv.controllers.PostgresController import PostgresController
+from tuidbtv.controllers.SQLLiteController import SQLLiteController
 
 
 class ConnectionForms(Widget):
