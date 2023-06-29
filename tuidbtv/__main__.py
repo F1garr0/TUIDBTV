@@ -1,11 +1,11 @@
 import os
 from textual.app import App, ComposeResult
 from textual.containers import *
-from textual.widgets import Tree, DataTable, Footer, Header, TabbedContent, TabPane, Markdown, TextLog, Input, Button
+from textual.widgets import Tree, DataTable, Footer, Header, TabbedContent, TabPane, Markdown
 
-from widgets.QuitScreen import QuitScreen
-from widgets.SQLEditor import SQLEditor
-from widgets.SelectConnection import SelectConnection
+from tuidbtv.widgets.QuitScreen import QuitScreen
+from tuidbtv.widgets.SQLEditor import SQLEditor
+from tuidbtv.widgets.SelectConnection import SelectConnection
 
 '''
 TODO:
@@ -73,9 +73,11 @@ class TUIDBTV(App):
 
 # ---------------------------------------------------------------------------------------------
 
-
-if __name__ == "__main__":
-    os.environ['TERM'] = 'xterm-256color'
+def run():
+    #os.environ['TERM'] = 'xterm-256color'
     app = TUIDBTV()
     reply = app.run()
     print(reply)
+
+if __name__ == "__main__":
+    run()

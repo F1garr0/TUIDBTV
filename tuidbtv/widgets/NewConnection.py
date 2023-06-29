@@ -5,12 +5,9 @@ from textual.screen import ModalScreen
 from textual.validation import Length
 from textual.widgets import Select, Label, Input, Button, Placeholder
 
-from src.tuidbtv.widgets.forms.ConnectionForms import ConnectionForms
-
-
-#from src.tuidbtv.config import ConfigParser
-#from src.tuidbtv.enums_and_variables import CONNECTION_FIELD_SELECTOR
-#from src.tuidbtv.widgets.forms.ConnectionForms import ConnectionForms
+from tuidbtv.config.ConfigParser import ConfigParser
+from tuidbtv.enums_and_variables import CONNECTION_FIELD_SELECTOR
+from tuidbtv.widgets.forms.ConnectionForms import ConnectionForms
 
 
 class NewConnection(ModalScreen):

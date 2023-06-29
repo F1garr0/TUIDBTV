@@ -3,10 +3,10 @@ from textual.containers import Grid, Vertical
 from textual.screen import ModalScreen
 from textual.widgets import OptionList, Placeholder, Button
 
-from src.tuidbtv.config import ConfigParser
-from src.tuidbtv.controllers.ControllerFactory import ControllerFactory
-from src.tuidbtv.widgets.NewConnection import NewConnection
-from src.tuidbtv.widgets.PopUpScreen import PopUpScreen
+from tuidbtv.config.ConfigParser import ConfigParser
+from tuidbtv.controllers.ControllerFactory import ControllerFactory
+from tuidbtv.widgets.NewConnection import NewConnection
+from tuidbtv.widgets.PopUpScreen import PopUpScreen
 
 
 class SelectConnection(ModalScreen):

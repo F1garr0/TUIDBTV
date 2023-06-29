@@ -1,6 +1,6 @@
-from src.tuidbtv.controllers.MySQLController import MySQLController
-from src.tuidbtv.controllers.PostgresController import PostgresController
-from src.tuidbtv.controllers.SQLLiteController import SQLLiteController
+from tuidbtv.controllers.MySQLController import MySQLController
+from tuidbtv.controllers.PostgresController import PostgresController
+from tuidbtv.controllers.SQLLiteController import SQLLiteController
 
 
 class ControllerFactory:

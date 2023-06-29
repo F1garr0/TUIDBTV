@@ -1,3 +1,4 @@
 textual[dev]
 psycopg[binary]
 mysql-connector-python
+poetry
