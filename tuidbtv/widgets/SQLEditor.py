@@ -1,17 +1,18 @@
 from textual import on
 from textual.app import ComposeResult
-from textual.suggester import SuggestFromList
 from textual.widget import Widget
 from textual.widgets import Input, Button, DataTable
 
+from tuidbtv.suggesters.SuggesterDict import SuggesterDict
 from tuidbtv.widgets.PopUpScreen import PopUpScreen
 
-sql_abc = ["select rolname from pg_catalog.pg_roles;"]
+sql_abc = ["select", "from", "where", "join", "right", "left", "inner", "like", "insert", "into", "update",
+           "order", "group", "by", "as", "on"]
 
 
 class SQLEditor(Widget):
     def compose(self) -> ComposeResult:
-        yield Input(suggester=SuggestFromList(sql_abc, case_sensitive=False), id="new_request_input")
+        yield Input(suggester=SuggesterDict(sql_abc, case_sensitive=False), id="new_request_input")
         yield Button("Run", id="execute_editor_button")
         yield DataTable(id="editor_table")
 

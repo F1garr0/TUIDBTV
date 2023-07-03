@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tuidbtv"
-version = "0.1.2"
+version = "0.1.5"
 description = "console database client"
 authors = ["lakdemon"]
 license = "MIT"
