@@ -37,10 +37,18 @@ class PostgresController(DBController):
             raise e
 
     def getSchemaNames(self):
-        return self.executeQuery("SELECT distinct table_schema FROM information_schema.tables")
+        data = sorted(self.executeQuery("SELECT distinct table_schema FROM information_schema.tables"))
+        try:
+            return sorted(data)
+        except:
+            return data
 
     def getTableNamesBySchema(self, schemaName):
-        return self.executeQuery(f"SELECT table_name FROM information_schema.tables WHERE table_schema='{schemaName}'")
+        data = self.executeQuery(f"SELECT table_name FROM information_schema.tables WHERE table_schema='{schemaName}'")
+        try:
+            return sorted(data)
+        except:
+            return data
 
     def getTablePreview(self, schemaName, tableName):
         data = self.executeQuery(f"SELECT * FROM {schemaName}.{tableName} limit 100")
