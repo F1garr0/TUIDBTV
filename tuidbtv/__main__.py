@@ -42,14 +42,21 @@ class TUIDBTV(App):
 
     def openConnectionSelectScreen(self, can_quit=False):
         def select_connection(db_controller):
+            editor = self.query_one(SQLEditor)
             self.dbController = db_controller
             tree = self.query_one(Tree)
             tree.clear()
             tree.root.expand()
+            new_suggestions = []
             for schemaName in self.dbController.getSchemaNames():
                 schema = tree.root.add(schemaName[0])
+                new_suggestions.append(schemaName[0])
                 for tableName in self.dbController.getTableNamesBySchema(schemaName[0]):
                     schema.add_leaf(tableName[0])
+                    new_suggestions.append(tableName[0])
+                    new_suggestions.append(f"{schemaName[0]}.{tableName[0]}")
+            editor.clean_completions()
+            editor.add_completions(new_suggestions)
 
         self.push_screen(SelectConnection(_can_quit=can_quit), select_connection)
 
