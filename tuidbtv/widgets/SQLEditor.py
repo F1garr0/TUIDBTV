@@ -1,17 +1,18 @@
 from textual import on
 from textual.app import ComposeResult
-from textual.suggester import SuggestFromList
 from textual.widget import Widget
 from textual.widgets import Input, Button, DataTable
 
+from tuidbtv.suggesters.SuggesterDict import SuggesterDict
 from tuidbtv.widgets.PopUpScreen import PopUpScreen
 
-sql_abc = ["select rolname from pg_catalog.pg_roles;"]
+sql_abc = ["select", "from", "where", "join", "right join", "left join", "inner join",
+           "like", "insert", "into", "update", "order", "group", "by", "as", "on"]
 
 
 class SQLEditor(Widget):
     def compose(self) -> ComposeResult:
-        yield Input(suggester=SuggestFromList(sql_abc, case_sensitive=False), id="new_request_input")
+        yield Input(suggester=SuggesterDict([] + sql_abc, case_sensitive=False), id="new_request_input")
         yield Button("Run", id="execute_editor_button")
         yield DataTable(id="editor_table")
 
@@ -28,3 +29,17 @@ class SQLEditor(Widget):
                 table.add_rows(data[1:])
             except Exception as e:
                 self.app.push_screen(PopUpScreen(e.__str__()))
+
+    def add_completions(self, new_completions: list[str]):
+        request_field = self.query_one("#new_request_input", expect_type=Input)
+        try:
+            request_field.suggester.add_suggestions(new_completions)
+        except:
+            pass
+
+    def clean_completions(self):
+        input = self.query_one("#new_request_input", expect_type=Input)
+        try:
+            input.suggester.set_suggestions([] + sql_abc)
+        except:
+            pass
