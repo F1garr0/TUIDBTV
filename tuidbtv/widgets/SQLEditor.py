@@ -6,13 +6,19 @@ from textual.widgets import Input, Button, DataTable
 from tuidbtv.suggesters.SuggesterDict import SuggesterDict
 from tuidbtv.widgets.PopUpScreen import PopUpScreen
 
-sql_abc = ["select", "from", "where", "join", "right join", "left join", "inner join",
-           "like", "insert", "into", "update", "order", "group", "by", "as", "on"]
+#sql_abc = ["select", "from", "where", "join", "right join", "left join", "inner join",
+#           "like", "insert", "into", "update", "order", "group", "by", "as", "on"]
 
 
 class SQLEditor(Widget):
+
+    def __init__(self, sql_abc: list[str], additional_suggestions: list[str] = []):
+        super().__init__()
+        self.sql_abc = sql_abc
+        self.suggestions = additional_suggestions
+
     def compose(self) -> ComposeResult:
-        yield Input(suggester=SuggesterDict([] + sql_abc, case_sensitive=False), id="new_request_input")
+        yield Input(suggester=SuggesterDict(self.suggestions + self.sql_abc, case_sensitive=False), id="new_request_input")
         yield Button("Run", id="execute_editor_button")
         yield DataTable(id="editor_table")
 
@@ -40,6 +46,6 @@ class SQLEditor(Widget):
     def clean_completions(self):
         input = self.query_one("#new_request_input", expect_type=Input)
         try:
-            input.suggester.set_suggestions([] + sql_abc)
+            input.suggester.set_suggestions([] + self.sql_abc)
         except:
             pass
