@@ -11,11 +11,11 @@ from tuidbtv.widgets.PopUpScreen import PopUpScreen
 
 class SelectConnection(ModalScreen):
     highlighted_index = 0
-    can_quit = True
+    firstRun = True
 
-    def __init__(self, _can_quit=True):
+    def __init__(self, firstRun = False):
         super().__init__()
-        self.can_quit = _can_quit
+        self.firstRun = firstRun
 
     def compose(self) -> ComposeResult:
         yield Grid(
@@ -26,7 +26,7 @@ class SelectConnection(ModalScreen):
                 Button("Edit connection", id="edit_connection_button", disabled=True),
                 Button.error("Delete Connection", id="delete_connection_button", disabled=True),
             ),
-            Button.warning("Cancel", id="cancel_select_connection_button", disabled=not self.can_quit),
+            Button.warning("Quit" if self.firstRun else "Cancel", id="cancel_select_connection_button"),
             Placeholder(),
             Button.success("Connect", id="connect_button", disabled=True),
             id="select_connection_dialog"
@@ -64,7 +64,10 @@ class SelectConnection(ModalScreen):
                         except:
                             self.app.push_screen(PopUpScreen("Some errors happened while trying to connect :c"))
             case "cancel_select_connection_button":
-                self.app.pop_screen()
+                if self.firstRun:
+                    self.app.exit()
+                else:
+                    self.app.pop_screen()
             case "delete_connection_button":
                 selectedConnection: OptionList = self.queryConnectionsList()
                 selectedOption = selectedConnection.get_option_at_index(self.highlighted_index).prompt.__str__()
@@ -73,7 +76,7 @@ class SelectConnection(ModalScreen):
                 if selectedConnection.option_count == 0:
                     self.query_one("#connect_button").disabled = True
                     self.query_one("#test_connection_button").disabled = True
-                    # self.query_one("#edit_connection_button").disabled = True
+                    self.query_one("#edit_connection_button").disabled = True
                     self.query_one("#delete_connection_button").disabled = True
 
             case "test_connection_button":

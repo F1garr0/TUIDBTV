@@ -48,7 +48,7 @@ class TUIDBTV(App):
                     yield Markdown()
         yield Footer()
 
-    def openConnectionSelectScreen(self, can_quit=False):
+    def openConnectionSelectScreen(self, _firstRun = False):
         def select_connection(db_controller):
             self.dbController = db_controller
             tree = self.query_one(Tree)
@@ -66,10 +66,10 @@ class TUIDBTV(App):
                 editor.clean_completions()
                 editor.add_completions(self.suggestions)
 
-        self.push_screen(SelectConnection(_can_quit=can_quit), select_connection)
+        self.push_screen(SelectConnection(firstRun=_firstRun), select_connection)
 
     def on_mount(self) -> None:
-        self.openConnectionSelectScreen(can_quit=False)
+        self.openConnectionSelectScreen(_firstRun=True)
 
     def on_tree_node_selected(self, event: Tree.NodeSelected):
         if not event.node.allow_expand:
@@ -84,7 +84,7 @@ class TUIDBTV(App):
         self.push_screen(QuitScreen())
 
     def action_select_connection_window(self):
-        self.openConnectionSelectScreen(can_quit=True)
+        self.openConnectionSelectScreen()
 
     def action_add_new_tab(self):
         tab_pane = self.query_one(TabbedContent)
