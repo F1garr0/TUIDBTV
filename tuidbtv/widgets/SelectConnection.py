@@ -21,14 +21,13 @@ class SelectConnection(ModalScreen):
         yield Grid(
             OptionList(id="select_connection_list"),
             Vertical(
+                Button.success("Connect", id="connect_button", disabled=True),
                 Button("New Connection", variant="primary", id="new_connection_button"),
                 Button("Test connection", id="test_connection_button", disabled=True),
                 Button("Edit connection", id="edit_connection_button", disabled=True),
                 Button.error("Delete Connection", id="delete_connection_button", disabled=True),
             ),
             Button.warning("Quit" if self.firstRun else "Cancel", id="cancel_select_connection_button"),
-            Placeholder(),
-            Button.success("Connect", id="connect_button", disabled=True),
             id="select_connection_dialog"
         )
 
