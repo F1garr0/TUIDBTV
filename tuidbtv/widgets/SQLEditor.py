@@ -3,22 +3,19 @@ from textual.app import ComposeResult
 from textual.widget import Widget
 from textual.widgets import Input, Button, DataTable
 
+from tuidbtv.enums_and_variables import SQL_ABC
 from tuidbtv.suggesters.SuggesterDict import SuggesterDict
 from tuidbtv.widgets.PopUpScreen import PopUpScreen
-
-#sql_abc = ["select", "from", "where", "join", "right join", "left join", "inner join",
-#           "like", "insert", "into", "update", "order", "group", "by", "as", "on"]
 
 
 class SQLEditor(Widget):
 
-    def __init__(self, sql_abc: list[str], additional_suggestions: list[str] = []):
+    def __init__(self, additional_suggestions: list[str] = []):
         super().__init__()
-        self.sql_abc = sql_abc
         self.suggestions = additional_suggestions
 
     def compose(self) -> ComposeResult:
-        yield Input(suggester=SuggesterDict(self.suggestions + self.sql_abc, case_sensitive=False), id="new_request_input")
+        yield Input(suggester=SuggesterDict(self.suggestions + SQL_ABC, case_sensitive=False), id="new_request_input")
         yield Button("Run", id="execute_editor_button")
         yield DataTable(id="editor_table")
 
@@ -39,13 +36,13 @@ class SQLEditor(Widget):
     def add_completions(self, new_completions: list[str]):
         request_field = self.query_one("#new_request_input", expect_type=Input)
         try:
-            request_field.suggester.add_suggestions(new_completions)
+            request_field.suggester.add_suggestions([] + new_completions)
         except:
             pass
 
     def clean_completions(self):
         input = self.query_one("#new_request_input", expect_type=Input)
         try:
-            input.suggester.set_suggestions([] + self.sql_abc)
+            input.suggester.set_suggestions([] + SQL_ABC)
         except:
             pass

@@ -1,5 +1,3 @@
-import os
-
 from textual import on
 from textual.app import App, ComposeResult
 from textual.containers import *
@@ -18,8 +16,6 @@ TODO:
 - add edit connection functionality
 '''
 
-sql_abc = ["select", "from", "where", "join", "right join", "left join", "inner join",
-           "like", "insert", "into", "update", "order", "group", "by", "as", "on"]
 
 # ---------------------------------------------------------------------------------------------
 
@@ -37,7 +33,7 @@ class TUIDBTV(App):
     def __init__(self):
         super().__init__()
         self.tabs_count = 0
-        self.suggestions = [] + sql_abc
+        self.suggestions = []
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -47,7 +43,7 @@ class TUIDBTV(App):
                 with TabPane("preview", id="preview_tab"):
                     yield DataTable(id="preview_data_table")
                 with TabPane("editor", id="editor_tab"):
-                    yield SQLEditor(sql_abc)
+                    yield SQLEditor()
                 with TabPane(" + ", id="add_new_tab_pane"):
                     yield Markdown()
         yield Footer()
@@ -58,7 +54,7 @@ class TUIDBTV(App):
             tree = self.query_one(Tree)
             tree.clear()
             tree.root.expand()
-            self.suggestions = [] + sql_abc
+            self.suggestions = []
             for schemaName in self.dbController.getSchemaNames():
                 schema = tree.root.add(schemaName[0])
                 self.suggestions.append(schemaName[0])
@@ -96,7 +92,7 @@ class TUIDBTV(App):
         self.tabs_count += 1
         new_tab_id = f"editor_tab{self.tabs_count}"
         tab_pane.add_pane(
-            TabPane(new_tab_id, SQLEditor(sql_abc, self.suggestions), id=new_tab_id),
+            TabPane(new_tab_id, SQLEditor(self.suggestions), id=new_tab_id),
             before = add_new_tab_pane
         )
         return new_tab_id
@@ -120,10 +116,11 @@ class TUIDBTV(App):
 # ---------------------------------------------------------------------------------------------
 
 def run():
-    #os.environ['TERM'] = 'xterm-256color'
+    # os.environ['TERM'] = 'xterm-256color'
     app = TUIDBTV()
     reply = app.run()
     print(reply)
+
 
 if __name__ == "__main__":
     run()
