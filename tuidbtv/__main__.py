@@ -1,7 +1,7 @@
-import os
+from textual import on
 from textual.app import App, ComposeResult
 from textual.containers import *
-from textual.widgets import Tree, DataTable, Footer, Header, TabbedContent, TabPane, Markdown
+from textual.widgets import Tree, DataTable, Footer, Header, TabbedContent, TabPane, Markdown, ContentSwitcher
 
 from tuidbtv.widgets.QuitScreen import QuitScreen
 from tuidbtv.widgets.SQLEditor import SQLEditor
@@ -25,7 +25,15 @@ class TUIDBTV(App):
     BINDINGS = [
         ("q", "quit_window()", "Quit"),
         ("s", "select_connection_window()", "Select connection"),
+        ("r", "quit_window()", "Refresh"),
+        ("a", "add_new_tab()", "Add tab"),
+        ("d", "remove_current_tab()", "Delete current tab"),
     ]
+
+    def __init__(self):
+        super().__init__()
+        self.tabs_count = 0
+        self.suggestions = []
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -36,27 +44,27 @@ class TUIDBTV(App):
                     yield DataTable(id="preview_data_table")
                 with TabPane("editor", id="editor_tab"):
                     yield SQLEditor()
-                with TabPane("+", id="add_new_tab"):
+                with TabPane(" + ", id="add_new_tab_pane"):
                     yield Markdown()
         yield Footer()
 
     def openConnectionSelectScreen(self, can_quit=False):
         def select_connection(db_controller):
-            editor = self.query_one(SQLEditor)
             self.dbController = db_controller
             tree = self.query_one(Tree)
             tree.clear()
             tree.root.expand()
-            new_suggestions = []
+            self.suggestions = []
             for schemaName in self.dbController.getSchemaNames():
                 schema = tree.root.add(schemaName[0])
-                new_suggestions.append(schemaName[0])
+                self.suggestions.append(schemaName[0])
                 for tableName in self.dbController.getTableNamesBySchema(schemaName[0]):
                     schema.add_leaf(tableName[0])
-                    new_suggestions.append(tableName[0])
-                    new_suggestions.append(f"{schemaName[0]}.{tableName[0]}")
-            editor.clean_completions()
-            editor.add_completions(new_suggestions)
+                    self.suggestions.append(tableName[0])
+                    self.suggestions.append(f"{schemaName[0]}.{tableName[0]}")
+            for editor in self.query(SQLEditor).nodes:
+                editor.clean_completions()
+                editor.add_completions(self.suggestions)
 
         self.push_screen(SelectConnection(_can_quit=can_quit), select_connection)
 
@@ -78,13 +86,41 @@ class TUIDBTV(App):
     def action_select_connection_window(self):
         self.openConnectionSelectScreen(can_quit=True)
 
+    def action_add_new_tab(self):
+        tab_pane = self.query_one(TabbedContent)
+        add_new_tab_pane = self.query("#add_new_tab_pane").filter("TabPane").first()
+        self.tabs_count += 1
+        new_tab_id = f"editor_tab{self.tabs_count}"
+        tab_pane.add_pane(
+            TabPane(new_tab_id, SQLEditor(self.suggestions), id=new_tab_id),
+            before = add_new_tab_pane
+        )
+        return new_tab_id
+
+    def action_remove_current_tab(self):
+        tab_pane = self.query_one(TabbedContent)
+        active_tab_id = tab_pane.active
+        if active_tab_id not in ["preview_tab", "editor_tab", "add_new_tab_pane"]:
+            tab_pane.remove_pane(active_tab_id)
+
+    @on(TabbedContent.TabActivated)
+    def add_new_tab_opened(self, event: TabbedContent.TabActivated):
+        if event.tab.label.__str__() == " + ":
+            new_tab_id = self.action_add_new_tab()
+            tab_pane = self.query_one(TabbedContent)
+            switcher = tab_pane.get_child_by_type(ContentSwitcher)
+            tab_pane.active = new_tab_id
+            switcher.current = new_tab_id
+
+
 # ---------------------------------------------------------------------------------------------
 
 def run():
-    #os.environ['TERM'] = 'xterm-256color'
+    # os.environ['TERM'] = 'xterm-256color'
     app = TUIDBTV()
     reply = app.run()
     print(reply)
+
 
 if __name__ == "__main__":
     run()
