@@ -28,6 +28,7 @@ class TUIDBTV(App):
         ("r", "quit_window()", "Refresh"),
         ("a", "add_new_tab()", "Add tab"),
         ("d", "remove_current_tab()", "Delete current tab"),
+        ("m", "toggle_dark", "Toggle dark mode"),
     ]
 
     def __init__(self):
@@ -70,6 +71,10 @@ class TUIDBTV(App):
 
     def on_mount(self) -> None:
         self.openConnectionSelectScreen(_firstRun=True)
+
+    def action_toggle_dark(self) -> None:
+        """An action to toggle dark mode."""
+        self.dark = not self.dark
 
     def on_tree_node_selected(self, event: Tree.NodeSelected):
         if not event.node.allow_expand:
