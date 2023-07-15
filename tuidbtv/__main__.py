@@ -3,6 +3,8 @@ from textual.app import App, ComposeResult
 from textual.containers import *
 from textual.widgets import Tree, DataTable, Footer, Header, TabbedContent, TabPane, Markdown, ContentSwitcher
 
+from tuidbtv.signals import PreviewNeed
+from tuidbtv.widgets.PreviewData import PreviewData
 from tuidbtv.widgets.QuitScreen import QuitScreen
 from tuidbtv.widgets.SQLEditor import SQLEditor
 from tuidbtv.widgets.SelectConnection import SelectConnection
@@ -35,6 +37,7 @@ class TUIDBTV(App):
         super().__init__()
         self.tabs_count = 0
         self.suggestions = []
+        self.dbController = None
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -42,14 +45,14 @@ class TUIDBTV(App):
             yield Tree("schemas")
             with TabbedContent():
                 with TabPane("preview", id="preview_tab"):
-                    yield DataTable(id="preview_data_table")
+                    yield PreviewData()
                 with TabPane("editor", id="editor_tab"):
                     yield SQLEditor()
                 with TabPane(" + ", id="add_new_tab_pane"):
                     yield Markdown()
         yield Footer()
 
-    def openConnectionSelectScreen(self, _firstRun = False):
+    def openConnectionSelectScreen(self, _firstRun=False):
         def select_connection(db_controller):
             self.dbController = db_controller
             tree = self.query_one(Tree)
@@ -73,17 +76,21 @@ class TUIDBTV(App):
         self.openConnectionSelectScreen(_firstRun=True)
 
     def action_toggle_dark(self) -> None:
-        """An action to toggle dark mode."""
         self.dark = not self.dark
 
-    def on_tree_node_selected(self, event: Tree.NodeSelected):
-        if not event.node.allow_expand:
-            table = self.query_one("#preview_data_table")
-            table.clear(columns=True)
-            tableData = self.dbController.getTablePreview(event.node.parent.label, event.node.label)
-            table.add_columns(*tableData[0])
-            table.zebra_stripes = True
-            table.add_rows(tableData[1:])
+    @on(Tree.NodeSelected)
+    def refresh_preview_data(self, event: Tree.NodeSelected):
+        preview = self.query(PreviewData).first()
+        preview.refresh_table_data(event)
+
+    @on(PreviewNeed)
+    def update_preview_data(self, event: PreviewNeed):
+        preview = self.query_one(PreviewData)
+        data = self.dbController.getTablePreview(event.schema,
+                                                 event.table,
+                                                 event.column,
+                                                 event.desc)
+        preview.populate_data(data)
 
     def action_quit_window(self):
         self.push_screen(QuitScreen())
