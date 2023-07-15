@@ -5,7 +5,7 @@ class DBController():
     def getTableNamesBySchema(self, schemaName: str) -> list[str]:
         pass
 
-    def getTablePreview(self, schemaName: str, tableName: str) -> list[dict]:
+    def getTablePreview(self, schemaName: str, tableName: str, order_by="", desc=False) -> list[dict]:
         pass
 
     def executeQuery(self, queryText: str) -> list[dict]:

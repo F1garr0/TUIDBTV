@@ -18,8 +18,9 @@ class SQLLiteController(DBController):
     def getTableNamesBySchema(self, schemaName: str) -> list[str]:
         return self.executeQuery("SELECT name FROM sqlite_master WHERE type='table';")
 
-    def getTablePreview(self, schemaName: str, tableName: str) -> list[dict]:
-        return self.executeQueryWithHeaders(f"select * from {tableName} limit 50;")
+    def getTablePreview(self, schemaName: str, tableName: str, order_by="", desc=False) -> list[dict]:
+        order = f"order by {order_by} {'desc' if desc else  'asc'}" if order_by else ''
+        return self.executeQueryWithHeaders(f"select * from {tableName} {order} limit 50;")
 
     def executeQuery(self, queryText: str) -> list[str]:
         cursor = self.connection.cursor()

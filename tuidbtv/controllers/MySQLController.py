@@ -23,8 +23,9 @@ class MySQLController(DBController):
     def getTableNamesBySchema(self, schemaName: str):
         return self.executeQuery(f"SHOW TABLES FROM `{schemaName}`")
 
-    def getTablePreview(self, schemaName: str, tableName: str):
-        return self.executeQueryWithHeaders(f"SELECT * FROM {schemaName}.{tableName} limit 100")
+    def getTablePreview(self, schemaName: str, tableName: str, order_by="", desc=False):
+        order = f"order by {order_by} {'desc' if desc else  'asc'}" if order_by else ''
+        return self.executeQueryWithHeaders(f"SELECT * FROM {schemaName}.{tableName} {order} limit 50")
 
     def executeQuery(self, query_text: str):
         try:

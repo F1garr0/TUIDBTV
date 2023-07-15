@@ -50,8 +50,11 @@ class PostgresController(DBController):
         except:
             return data
 
-    def getTablePreview(self, schemaName, tableName):
-        data = self.executeQuery(f"SELECT * FROM {schemaName}.{tableName} limit 100")
+    def getTablePreview(self, schemaName, tableName, order_by="", desc=False):
+        order = f"order by {order_by} {'desc' if desc else  'asc'}" if order_by else ''
+        data = self.executeQuery(
+            f"SELECT * FROM {schemaName}.{tableName} {order} limit 50"
+        )
         cutted_data = []
         for row in data:
             cutted_data.append(
