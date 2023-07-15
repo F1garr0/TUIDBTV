@@ -2,7 +2,9 @@ from textual import on
 from textual.app import App, ComposeResult
 from textual.containers import *
 from textual.widgets import Tree, DataTable, Footer, Header, TabbedContent, TabPane, Markdown, ContentSwitcher
+from textual.widgets._header import HeaderTitle
 
+from tuidbtv.enums_and_variables import APP_VERSION
 from tuidbtv.signals import PreviewNeed
 from tuidbtv.widgets.PreviewData import PreviewData
 from tuidbtv.widgets.QuitScreen import QuitScreen
@@ -40,7 +42,7 @@ class TUIDBTV(App):
         self.dbController = None
 
     def compose(self) -> ComposeResult:
-        yield Header()
+        yield Header(name="tuidbtv 0.1.9")
         with Horizontal():
             yield Tree("schemas")
             with TabbedContent():
@@ -73,7 +75,10 @@ class TUIDBTV(App):
         self.push_screen(SelectConnection(firstRun=_firstRun), select_connection)
 
     def on_mount(self) -> None:
+        header = self.query_one(HeaderTitle)
+        header.text = f"tuidbtv {APP_VERSION}"
         self.openConnectionSelectScreen(_firstRun=True)
+
 
     def action_toggle_dark(self) -> None:
         self.dark = not self.dark
