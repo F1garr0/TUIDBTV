@@ -36,6 +36,17 @@ class SelectConnection(ModalScreen):
         for connection in ConfigParser.readConnectionList():
             optionList.add_option(connection["connectionName"])
 
+    class SelectConnectionResult:
+        def __init__(self, db_controller, connection_name):
+            self.controller = db_controller
+            self.connection_name = connection_name
+
+        def get_controller(self):
+            return self.controller
+
+        def get_conn_name(self):
+            return self.connection_name
+
     def on_button_pressed(self, event):
         def addNewConnection(connectionName):
             optionList: OptionList = self.queryConnectionsList()
@@ -59,7 +70,7 @@ class SelectConnection(ModalScreen):
                     if connection['connectionName'] == selectedOption:
                         try:
                             controller = ControllerFactory.getController(connection)
-                            self.dismiss(controller)
+                            self.dismiss(self.SelectConnectionResult(controller, connection['connectionName']))
                         except:
                             self.app.push_screen(PopUpScreen("Some errors happened while trying to connect :c"))
             case "cancel_select_connection_button":

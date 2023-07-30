@@ -44,7 +44,7 @@ class TUIDBTV(App):
     def compose(self) -> ComposeResult:
         yield Header(name="tuidbtv 0.1.9")
         with Horizontal():
-            yield Tree("schemas")
+            yield Tree(" ")
             with TabbedContent():
                 with TabPane("preview", id="preview_tab"):
                     yield PreviewData()
@@ -55,11 +55,12 @@ class TUIDBTV(App):
         yield Footer()
 
     def openConnectionSelectScreen(self, _firstRun=False):
-        def select_connection(db_controller):
-            self.dbController = db_controller
+        def select_connection(result: SelectConnection.SelectConnectionResult):
+            self.dbController = result.get_controller()
             tree = self.query_one(Tree)
             tree.clear()
             tree.root.expand()
+            tree.root.label = result.get_conn_name()
             self.suggestions = []
             for schemaName in self.dbController.getSchemaNames():
                 schema = tree.root.add(schemaName[0])
@@ -79,14 +80,28 @@ class TUIDBTV(App):
         header.text = f"tuidbtv {APP_VERSION}"
         self.openConnectionSelectScreen(_firstRun=True)
 
-
     def action_toggle_dark(self) -> None:
         self.dark = not self.dark
 
     @on(Tree.NodeSelected)
-    def refresh_preview_data(self, event: Tree.NodeSelected):
-        preview = self.query(PreviewData).first()
+    async def refresh_preview_data(self, event: Tree.NodeSelected):
+        if not event.node.allow_expand:
+            await self.refresh_preview_tab_name(f"{event.node.label}")
+        preview = self.query_one(PreviewData)
         preview.refresh_table_data(event)
+
+    async def refresh_preview_tab_name(self, new_name: str):
+        preview_tab: TabPane = self.query("#preview_tab")\
+            .filter("TabPane")\
+            .first(expect_type=TabPane)
+        editor_tab: TabPane = self.query("#editor_tab")\
+            .filter("TabPane")\
+            .first(expect_type=TabPane)
+        new_preview_tab = TabPane(new_name, PreviewData(), id="preview_tab")
+        tab_pane = self.query_one(TabbedContent)
+        await tab_pane.remove_pane(preview_tab.id)
+        await tab_pane.add_pane(new_preview_tab, before=editor_tab)
+        tab_pane.active = new_preview_tab.id
 
     @on(PreviewNeed)
     def update_preview_data(self, event: PreviewNeed):
